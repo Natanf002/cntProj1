@@ -19,7 +19,7 @@ public class URLParser {
         }
     }
 
-    private static void fetchURL(String urlString) {
+    private static void fetchURL(String urlString, int flag) { //flag == 0 for default, 1 for redirect, 2 for reference
         try {
             URL url = new URL(urlString);
             String protocol = url.getProtocol();
@@ -39,14 +39,14 @@ public class URLParser {
                  BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
                 // Send an HTTP GET request
-                String request = "GET " + path + "\n" + "Host: " + host + "\n" + "Connection: closed";
+                String request = "GET " + path + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: closed\r\n\r\n";
                 out.println(request);
                 //System.out.println("Request sent: " + request);
 
                 // Read the response status line
                 String responseLine = in.readLine();
                 System.out.println("URL: " + urlString);
-                System.out.println("Status: " + responseLine);
+                System.out.println("Status: " + responseLine.substring(9));
 
                 // redirection if not 301 or 302
                 if (responseLine != null && (responseLine.contains("301") || responseLine.contains("302"))) {
@@ -70,10 +70,16 @@ public class URLParser {
                         // Print status for the redirected URL
                         fetchURL(location);
                     }
-                } else {
-                    // Handle other status codes
+                } else if (urlString.contains(".html")) {
+                    String imgTAG ="";
+                    String line;
+                    while((line = in.readLine()) != null){
+                        if(line.startsWith("<img ")){
+                            System.out.println(line);
 
-                    System.out.println("Final response received for " + urlString + ": not a redirect.");
+                        }
+                    }
+
                 }
 
             } catch (IOException e) {
