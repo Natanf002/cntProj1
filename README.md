@@ -1,5 +1,5 @@
-1. Natan Farhy - 6346028
-   Raul Herrero - (PantherID)
+1. Natan Farhy - 6346028,
+   Raul Herrero - (PantherID),
    Felix Arbucias - (PantherID)
 
 2. Language: Java
